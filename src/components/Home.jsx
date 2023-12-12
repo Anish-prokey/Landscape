@@ -96,6 +96,10 @@ export default function Home() {
     };
     fetchData();
   }, []);
+  // });
+ 
+ 
+ 
  
   // exporting table as excel file
  
@@ -167,6 +171,10 @@ export default function Home() {
   const [recipientEmail, setRecipientEmail] = useState('');
   const [emailError, setEmailError] = useState('');
  
+  // const validateEmail = (email) => {
+  //   var regex = /^[a-zA-Z]+(\.[a-zA-Z]+)@tyson\.com$/;
+  //   return regex.test(email);
+  // };
   const validateEmail = (email) => {
     var regex = /^[a-zA-Z]+(\.[a-zA-Z]+)@tyson\.com$/;
     return regex.test(email);
@@ -301,7 +309,7 @@ export default function Home() {
             ref={tableref}>
             <thead>
               <tr>
-                
+                {/* <th>SAP Product</th> */}
                 <th>SAP System ID </th>
                 <th>Type (Abap, dual stack, Java, Hana XS, S/4 Hana)</th>
                 <th>Does It Run On A Hana Database </th>
@@ -318,7 +326,14 @@ export default function Home() {
  
                     </svg></a>&nbsp;{info.Sysid}</td>
  
+                    {/* <td>{info.Sysid}</td> */}
+ 
+ 
+ 
                     <td>{info.Systype}</td>
+ 
+ 
+ 
                     <td>{info.Runhdb}</td>
  
  
