@@ -11,14 +11,14 @@ const ProductModal = ({ open, handleClose, sapSystemId }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(import.meta.env.VITE_API_BOX, {
+                const response = await axios.get('https://sapd49.tyson.com/sap/opu/odata/sap/ZAPI_PRDVERS_SRV/SysDetailsSet?sap-client=100', {
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     withCredentials: true,
                     auth: {
-                        username: import.meta.env.VITE_NAME,
-                        password: import.meta.env.VITE_PASS,
+                        username: 'JA',
+                        password: 'Aishh@12',
                     },
                 });
  

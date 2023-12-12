@@ -59,7 +59,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_API, {
+        const response = await axios.get('https://sapd49.tyson.com/sap/opu/odata/sap/ZAPI_PRDVERS_SRV/LandscapeDetailsSet?sap-client=100', {
           headers: {
  
             'Content-Type': 'application/json',
@@ -74,8 +74,8 @@ export default function Home() {
           withCredentials: true,
           auth: {
  
-            username: import.meta.env.VITE_NAME,
-            password: import.meta.env.VITE_PASS,
+            username: 'JA',
+            password: 'Aishh@12',
           },
         });
         // setData(response.data.feed.entry.map((item) => ({
@@ -96,10 +96,6 @@ export default function Home() {
     };
     fetchData();
   }, []);
-  // });
- 
- 
- 
  
   // exporting table as excel file
  
@@ -171,10 +167,6 @@ export default function Home() {
   const [recipientEmail, setRecipientEmail] = useState('');
   const [emailError, setEmailError] = useState('');
  
-  // const validateEmail = (email) => {
-  //   var regex = /^[a-zA-Z]+(\.[a-zA-Z]+)@tyson\.com$/;
-  //   return regex.test(email);
-  // };
   const validateEmail = (email) => {
     var regex = /^[a-zA-Z]+(\.[a-zA-Z]+)@tyson\.com$/;
     return regex.test(email);
@@ -309,7 +301,7 @@ export default function Home() {
             ref={tableref}>
             <thead>
               <tr>
-                {/* <th>SAP Product</th> */}
+                
                 <th>SAP System ID </th>
                 <th>Type (Abap, dual stack, Java, Hana XS, S/4 Hana)</th>
                 <th>Does It Run On A Hana Database </th>
@@ -326,14 +318,7 @@ export default function Home() {
  
                     </svg></a>&nbsp;{info.Sysid}</td>
  
-                    {/* <td>{info.Sysid}</td> */}
- 
- 
- 
                     <td>{info.Systype}</td>
- 
- 
- 
                     <td>{info.Runhdb}</td>
  
  

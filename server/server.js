@@ -10,6 +10,8 @@ const bodyParser = require('body-parser')
 const app = express();
 app.use(cors());
 app.use(express.json());
+const pdf = require('html-pdf');
+ 
  
  
  
@@ -31,51 +33,41 @@ app.post('/generate-and-send', async (req, res) => {
  
     let attachmentPath, attachmentType;
     if (fileFormat === 'pdf') {
-      // Generate PDF
-     
-      const pdfDoc = new pdfkit();
-      pdfDoc.text('SAP Landscape Table\n\n');
-      // pdfDoc.font('Helvetica-Bold');
-      // pdfDoc.text('SAP Product', { continued: true, underline: true });
-      // pdfDoc.text('\tSAP System ID', { continued: true, underline: true });
-      // pdfDoc.text('\tSystem Description', { continued: true, underline: true });
-      // pdfDoc.text('\tType', { continued: true, underline: true });
-      // pdfDoc.text('\tEnvironment', {continued: true,  underline: true });
-      // pdfDoc.text('\tDoes it run on a Hana database', { continued: true, underline: true });
-      // pdfDoc.text('\tHANA', { underline: true });
-      // pdfDoc.moveDown(0.5);
- 
-      // pdfDoc.font('Helvetica');
+      const headers = ['SAP System ID','Does It Run On A Hana Database','SAP Product', 'Type'];
+
+      const htmlContent = `
+        <html>
+          <head>
+            <style>
+              table {
+                width: 100%;
+                border-collapse: collapse;
+              }
+              th, td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>SAP Landscape Table</h1>
+            <table>
+              <tr>${headers.map(header => `<th>${header}</th>`).join('')}</tr>
+              ${filteredData.map(row => `<tr>${Object.values(row).map(value => `<td>${value}</td>`).join('')}</tr>`).join('')}
+            </table>
+          </body>
+        </html>
+      `;
+
       attachmentPath = path.join(tempDir, 'table.pdf');
-      tableData.forEach((row, index) => {
-        console.log(row.Sapproduct, " ", row.Systype)
-        pdfDoc.text(`${row.Sysid} ${row.Systype} ${row.Runhdb} ${row.Sapproduct}\n`);
-        // pdfDoc.text(`${row.sap_prod}`, { continued: true });
-        // pdfDoc.text('\t');
-        // pdfDoc.text(`${row.sap_sys_id}`, { continued: true });
-        // pdfDoc.text('\t');
-        // pdfDoc.text(`${row.sys_desc}`, { continued: true });
-        // pdfDoc.text('\t');
-        // pdfDoc.text(`${row.Type}`, { continued: true });
-        // pdfDoc.text('\t');
-        // pdfDoc.text(`${row.Environment}`, { continued: true });
-        // pdfDoc.text('\t');
-        // pdfDoc.text(`${row.run_hana}`, { continued: true });
-        // pdfDoc.text('\t');
-        // pdfDoc.text(`${row.HANA}`);
-        // Draw horizontal gridline
-        // pdfDoc.moveTo(0, pdfDoc.y + 10)
-        //   .lineTo(pdfDoc.page.width, pdfDoc.y + 10)
-        //   .stroke();
- 
-        // // Move down to the next line
-        // if (index !== tableData.length - 1) {
-        //   pdfDoc.moveDown();
-        // }
+
+      pdf.create(htmlContent).toFile(attachmentPath, function (err, res) {
+        if (err) throw err;
       });
-      pdfDoc.pipe(fs.createWriteStream(attachmentPath));
-      pdfDoc.end();
+
       attachmentType = 'application/pdf';
+
     } else if (fileFormat === 'excel') {
       // Generate Excel
       attachmentPath = path.join(tempDir, 'table.xlsx');
@@ -87,11 +79,11 @@ app.post('/generate-and-send', async (req, res) => {
       worksheet.columns = [
         { header: 'SAP Product', key: 'Sapproduct', width: 20 },
         { header: 'SAP System ID', key: 'Sysid', width: 20 },
-        // { header: 'System Description', key: 'sys_desc', width: 30 },
+        
         { header: 'Type', key: 'Systype', width: 20 },
-        // { header: 'Environment', key: 'Environment', width: 30 },
+       
         { header: 'Does it run on a Hana database', key: 'Runhdb', width: 30 },
-        // { header: 'HANA', key: 'HANA', width: 20 },
+        
       ];
       tableData.forEach((row) => {
         worksheet.addRow(row);
@@ -138,3 +130,9 @@ app.post('/generate-and-send', async (req, res) => {
     res.status(500).json({ error: 'Failed to send email' });
   }
 });
+
+ 
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+ 

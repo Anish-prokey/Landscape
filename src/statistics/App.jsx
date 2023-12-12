@@ -12,13 +12,12 @@ export default function App() {
   const [systems, setSystems] = useState([]);
   const[data,setData]= useState([]);
 
-
   const groupedSystems = {};
   useEffect(() => {
     const fetchData = async () => {
       try {
 
-        const response3 = await axios.get(import.meta.env.VITE_API, {
+        const response3 = await axios.get('https://sapd49.tyson.com/sap/opu/odata/sap/ZAPI_PRDVERS_SRV/SysDetailsSet?sap-client=100', {
         headers: {
 
           'Content-Type': 'application/json',
@@ -30,8 +29,8 @@ export default function App() {
 
         withCredentials: true,
         auth: {
-          username: import.meta.env.VITE_NAME,
-          password: import.meta.env.VITE_PASS,
+          username: 'JA',
+          password: 'Aishh@12',
         },
       });
         
@@ -75,8 +74,7 @@ export default function App() {
           
           setSystems(groupedSystems);
           
-          
-      } catch (error) {
+          } catch (error) {
         console.error('Error fetching systems:', error);
       }
     };
